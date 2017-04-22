@@ -63,4 +63,19 @@ public class Image {
         sb.append('}');
         return sb.toString();
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Image image = (Image) o;
+
+        return url != null ? url.equals(image.url) : image.url == null;
+    }
+
+    @Override
+    public int hashCode() {
+        return url != null ? url.hashCode() : 0;
+    }
 }

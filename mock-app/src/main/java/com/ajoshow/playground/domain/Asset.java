@@ -1,6 +1,7 @@
 package com.ajoshow.playground.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
 
 /**
@@ -11,7 +12,8 @@ public class Asset {
     private Integer id;
     private Data data;
     private Title title;
-    private Image img;
+    @JsonProperty("img")
+    private Image image;
     private Link link;
     @JsonUnwrapped
     private AssetMeta meta;
@@ -49,12 +51,12 @@ public class Asset {
         this.link = link;
     }
 
-    public Image getImg() {
-        return img;
+    public Image getImage() {
+        return image;
     }
 
-    public void setImg(Image img) {
-        this.img = img;
+    public void setImage(Image image) {
+        this.image = image;
     }
 
     public AssetMeta getMeta() {
@@ -79,13 +81,37 @@ public class Asset {
         if(link != null)
             sb.append(", link=").append(link);
 
-        if(img != null)
-            sb.append(", img=").append(img);
+        if(image != null)
+            sb.append(", image=").append(image);
 
         if(meta != null)
             sb.append(", meta=").append(meta);
 
         sb.append('}');
         return sb.toString();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Asset asset = (Asset) o;
+
+        if (id != null ? !id.equals(asset.id) : asset.id != null) return false;
+        if (data != null ? !data.equals(asset.data) : asset.data != null) return false;
+        if (title != null ? !title.equals(asset.title) : asset.title != null) return false;
+        if (image != null ? !image.equals(asset.image) : asset.image != null) return false;
+        return link != null ? link.equals(asset.link) : asset.link == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + (data != null ? data.hashCode() : 0);
+        result = 31 * result + (title != null ? title.hashCode() : 0);
+        result = 31 * result + (image != null ? image.hashCode() : 0);
+        result = 31 * result + (link != null ? link.hashCode() : 0);
+        return result;
     }
 }

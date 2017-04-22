@@ -45,4 +45,22 @@ public class Data {
         sb.append('}');
         return sb.toString();
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Data data = (Data) o;
+
+        if (value != null ? !value.equals(data.value) : data.value != null) return false;
+        return label != null ? label.equals(data.label) : data.label == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = value != null ? value.hashCode() : 0;
+        result = 31 * result + (label != null ? label.hashCode() : 0);
+        return result;
+    }
 }

@@ -14,7 +14,7 @@ public class AdContentAssetEntity implements Serializable {
     private Long id;
     private Data data;
     private Title title;
-    private Image img;
+    private Image image;
     private Link link;
     private AssetMeta meta;
 
@@ -48,12 +48,12 @@ public class AdContentAssetEntity implements Serializable {
     }
 
     @Embedded
-    public Image getImg() {
-        return img;
+    public Image getImage() {
+        return image;
     }
 
-    public void setImg(Image img) {
-        this.img = img;
+    public void setImage(Image image) {
+        this.image = image;
     }
 
     @Embedded

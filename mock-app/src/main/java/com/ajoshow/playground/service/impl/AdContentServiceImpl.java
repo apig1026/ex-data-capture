@@ -1,6 +1,6 @@
 package com.ajoshow.playground.service.impl;
 
-import com.ajoshow.playground.domain.AdContent;
+import com.ajoshow.playground.domain.dto.AdContentDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -16,13 +16,13 @@ public class AdContentServiceImpl {
     private RestTemplate restTemplate;
 
 
-    @Value("${app.tenmax.datasource.url:127.0.0.1}")
+    @Value("${app.tenmax.datasource.url}")
     private String tenMaxDSUrl;
-    @Value("${app.mockserver.datasource.url:127.0.0.1}")
+    @Value("${app.mockserver.datasource.url}")
     private String mockServerDSUrl;
 
-    public AdContent fetchContent(String url){
-        AdContent data = restTemplate.getForObject(tenMaxDSUrl, AdContent.class);
+    public AdContentDto fetchContent(String url){
+        AdContentDto data = restTemplate.getForObject(tenMaxDSUrl, AdContentDto.class);
         return data;
     }
 }

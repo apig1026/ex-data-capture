@@ -56,4 +56,19 @@ public class Link {
         sb.append('}');
         return sb.toString();
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Link link = (Link) o;
+
+        return url != null ? url.equals(link.url) : link.url == null;
+    }
+
+    @Override
+    public int hashCode() {
+        return url != null ? url.hashCode() : 0;
+    }
 }

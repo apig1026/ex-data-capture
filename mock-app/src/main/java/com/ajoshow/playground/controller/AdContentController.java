@@ -1,6 +1,6 @@
 package com.ajoshow.playground.controller;
 
-import com.ajoshow.playground.domain.AdContent;
+import com.ajoshow.playground.domain.dto.AdContentDto;
 import com.ajoshow.playground.service.impl.AdContentServiceImpl;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -32,8 +32,8 @@ public class AdContentController{
     @ResponseStatus(OK)
     @ResponseBody
     @RequestMapping(method= GET, value="/print")
-    public AdContent fetchContent() {
-        AdContent data = svc.fetchContent("");
+    public AdContentDto fetchContent() {
+        AdContentDto data = svc.fetchContent("");
         try {
             System.out.println(objectMapper.writeValueAsString(data));
         } catch (JsonProcessingException e) {
