@@ -4,6 +4,7 @@ import com.ajoshow.playground.domain.Link;
 import com.ajoshow.playground.domain.Title;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Set;
@@ -19,7 +20,7 @@ import java.util.Set;
 )
 public class AdContentEntity implements Serializable {
 
-    private Long id;
+    private Integer id;
     private Title title;
     private Set<String> impressionEvent;
     private Set<String> viewEvent;
@@ -29,16 +30,17 @@ public class AdContentEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name="AD_CONTENT_ID", nullable = false)
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
     @Embedded
-    @AttributeOverride(name="text", column=@Column(name="title"))
+    @AttributeOverride(name="text", column=@Column(name="title", nullable = false))
+    @NotNull
     public Title getTitle() {
         return title;
     }
@@ -55,7 +57,7 @@ public class AdContentEntity implements Serializable {
             },
             foreignKey = @ForeignKey(name = "fk_impression_url")
     )
-    @Column(name="impression_url", length = 512, nullable = false)
+    @Column(name="impression_url", length = 1000, nullable = false)
     public Set<String> getImpressionEvent() {
         return impressionEvent;
     }
@@ -72,7 +74,7 @@ public class AdContentEntity implements Serializable {
             },
             foreignKey = @ForeignKey(name = "fk_view_url")
     )
-    @Column(name="view_url", length = 512, nullable = false)
+    @Column(name="view_url", length = 1000, nullable = false)
     public Set<String> getViewEvent() {
         return viewEvent;
     }

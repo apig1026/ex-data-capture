@@ -24,7 +24,7 @@ public class Link {
         clicktrackers = new HashSet<>();
     }
 
-    @Column(name="link_url", length=512)
+    @Column(name="link_url", length=1000)
     public String getUrl() {
         return url;
     }

@@ -16,7 +16,6 @@ public class AdContent {
     private Set<String> viewEvent;
     private List<Asset> assets;
     private Link link;
-    private Title title;
 
     public AdContent(){
         impressionEvent = new HashSet<>();
@@ -56,14 +55,6 @@ public class AdContent {
         this.link = link;
     }
 
-    public Title getTitle() {
-        return title;
-    }
-
-    public void setTitle(Title title) {
-        this.title = title;
-    }
-
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("AdContent{");
@@ -71,7 +62,6 @@ public class AdContent {
         sb.append(", viewEvent=").append(viewEvent);
         sb.append(", assets=").append(assets);
         sb.append(", link=").append(link);
-        sb.append(", title=").append(title);
         sb.append('}');
         return sb.toString();
     }

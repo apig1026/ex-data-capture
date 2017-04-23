@@ -13,6 +13,12 @@ import javax.persistence.Embeddable;
 public class Title {
     private String text;
 
+    public Title(){}
+
+    public Title(String text){
+        this.text = text;
+    }
+
     @Column(name="title_text")
     public String getText() {
         return text;

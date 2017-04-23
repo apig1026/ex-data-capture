@@ -39,7 +39,7 @@ public class Image {
         this.height = height;
     }
 
-    @Column(name="image_url", length=512)
+    @Column(name="image_url", length=1000)
     public String getUrl() {
         return url;
     }

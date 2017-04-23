@@ -41,6 +41,7 @@ subprojects {
         compile('org.apache.commons:commons-collections4:4.1')
         compile('com.google.guava:guava:21.0')
         compile('com.fasterxml.jackson.core:jackson-databind')
+        compile('net.sf.dozer:dozer:5.5.1')
         providedRuntime('org.springframework.boot:spring-boot-starter-tomcat')
         testCompile('org.springframework.boot:spring-boot-starter-test')
     }

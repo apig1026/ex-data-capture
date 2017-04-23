@@ -11,7 +11,7 @@ import java.io.Serializable;
 @Entity
 @Table(name = "ad_content_asset")
 public class AdContentAssetEntity implements Serializable {
-    private Long id;
+    private Integer id;
     private Data data;
     private Title title;
     private Image image;
@@ -21,11 +21,11 @@ public class AdContentAssetEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(nullable = false)
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
