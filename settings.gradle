@@ -1,2 +1,2 @@
-include "mock-app", "mock-server"
+include "mock-common", "mock-app", "mock-server"
 

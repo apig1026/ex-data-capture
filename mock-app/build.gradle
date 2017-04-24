@@ -1,2 +1,4 @@
 // dependencies explicitly for mock-app
-dependencies {}
+dependencies {
+    compile( project(':mock-common') )
+}
