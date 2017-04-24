@@ -13,6 +13,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,7 +34,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
  */
 @Validated
 @Controller
-@RequestMapping(value = "/v/1")
+@RequestMapping(value = "/v/1/ad-contents")
 public class AdContentController{
 
     @Value("${app.tenmax.datasource.url}")
@@ -51,16 +52,22 @@ public class AdContentController{
     @Autowired
     private ObjectMapper objectMapper;
 
+    @Scheduled(cron = "${app.schedule.fetch.content.cron}")
+    public void scheduledFetchAndSaveContent() throws IOException {
+        fetchAndSaveContent();
+    }
+
     @ResponseStatus(OK)
     @ResponseBody
-    @RequestMapping(method= GET, value="/print")
-    public AdContentDto fetchContent() throws IOException {
+    @RequestMapping(method= GET, value="", params="action=fetch")
+    public AdContentDto fetchAndSaveContent() throws IOException {
         AdContentDto dto = fetchAdContent(tenMaxDSUrl);
-
-        System.out.println(objectMapper.writeValueAsString(dto));
-
         AdContentEntity entity = convertToEntity(dto);
+
         if(entity != null){
+            // debug | log event
+            System.out.println(objectMapper.writeValueAsString(entity));
+
             svc.saveOrUpdateAdContent(entity);
         }else{
             // invalid or null response body causes NULL entity
@@ -75,7 +82,6 @@ public class AdContentController{
     public List<AdContentDto> findAdContentEntityByTitle(
             @RequestParam(name="title") String title
     ) throws IOException {
-        // TODO decode title
         List<AdContentEntity> entities = svc.findAdContentEntityByTitle(title);
         List<AdContentDto> dtos = new ArrayList<>();
         for(AdContentEntity entity : entities){
