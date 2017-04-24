@@ -38,7 +38,7 @@ public class AdContentDao {
         StringBuilder query = new StringBuilder();
         query.append(" FROM ");
         query.append(AdContentEntity.class.getSimpleName());
-        query.append(" WHERE title = :title");
+        query.append(" WHERE title LIKE :title");
         return entityManager.createQuery(query.toString())
                 .setParameter("title", title)
                 .getResultList();

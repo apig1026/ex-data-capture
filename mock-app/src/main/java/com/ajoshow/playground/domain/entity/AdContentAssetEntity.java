@@ -73,4 +73,5 @@ public class AdContentAssetEntity implements Serializable {
     public void setMeta(AssetMeta meta) {
         this.meta = meta;
     }
+
 }

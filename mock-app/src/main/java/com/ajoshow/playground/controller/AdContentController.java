@@ -1,32 +1,28 @@
 package com.ajoshow.playground.controller;
 
+import com.ajoshow.playground.ReflectionUtils;
 import com.ajoshow.playground.domain.AdContent;
 import com.ajoshow.playground.domain.Asset;
 import com.ajoshow.playground.domain.AssetMeta;
 import com.ajoshow.playground.domain.Title;
 import com.ajoshow.playground.domain.dto.AdContentDto;
+import com.ajoshow.playground.domain.entity.AdContentAssetEntity;
 import com.ajoshow.playground.domain.entity.AdContentEntity;
 import com.ajoshow.playground.service.AdContentService;
-import com.ajoshow.playground.service.impl.AdContentServiceImpl;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.lang3.StringUtils;
-import org.dozer.DozerBeanMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.stream.IntStream;
+import java.util.*;
 
 import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
@@ -37,7 +33,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
  */
 @Validated
 @Controller
-@RequestMapping(value = "/adContents")
+@RequestMapping(value = "/v/1")
 public class AdContentController{
 
     @Value("${app.tenmax.datasource.url}")
@@ -54,9 +50,6 @@ public class AdContentController{
 
     @Autowired
     private ObjectMapper objectMapper;
-
-    @Autowired
-    private DozerBeanMapper beanMapper;
 
     @ResponseStatus(OK)
     @ResponseBody
@@ -78,16 +71,17 @@ public class AdContentController{
 
     @ResponseStatus(OK)
     @ResponseBody
-    @RequestMapping(method= POST, value="/print")
-    public AdContentDto findAdContentEntityByTitle() throws IOException {
-        AdContentDto dto = fetchAdContent(tenMaxDSUrl);
-
-        System.out.println(objectMapper.writeValueAsString(dto));
-
-        dto.getAdContent();
-
-
-        return dto;
+    @RequestMapping(method= POST, value="/query")
+    public List<AdContentDto> findAdContentEntityByTitle(
+            @RequestParam(name="title") String title
+    ) throws IOException {
+        // TODO decode title
+        List<AdContentEntity> entities = svc.findAdContentEntityByTitle(title);
+        List<AdContentDto> dtos = new ArrayList<>();
+        for(AdContentEntity entity : entities){
+            dtos.add(convertToDto(entity));
+        }
+        return dtos;
     }
 
     /**
@@ -109,16 +103,16 @@ public class AdContentController{
         AdContentEntity entity = null;
         AdContent adContent = dto.getAdContent();
         if(adContent != null){
-            entity = beanMapper.map(adContent, AdContentEntity.class);
             // At DTO level, the title is stored inside of Asset.
             // At Entity level, the title is stored inside of AdContent as an unique identifier.
             // As a result, we need to remove the title from
             // the assets and set it to the entity explicitly.
 
+            List<Asset> assets = Optional.ofNullable(adContent.getAssets())
+                    .orElseGet(Collections::emptyList);
+
             // Find and set title to the entity
-            String titleText = Optional.ofNullable(adContent.getAssets())
-                    .orElseGet(Collections::emptyList)
-                    .stream()
+            String titleText = assets.stream()
                     .filter(Objects::nonNull)
                     .map(Asset::getTitle)
                     .filter(Objects::nonNull)
@@ -126,18 +120,24 @@ public class AdContentController{
                     .filter(StringUtils::isNotBlank)
                     .findFirst()
                     .orElseThrow(IllegalArgumentException::new);
-            entity.setTitle(new Title(titleText));
 
-            // Remove title asset from the collection.
-            List<Asset> assets = adContent.getAssets(); // won't be null.
-            // precondition, assume only and only if one title asset in the list.
-            assets.removeIf(asset -> asset.getTitle() != null);
-
-            // Get rid off id
-            for (Asset asset : assets) {
-                asset.setId(null);
+            // Remove title asset from the collection
+            Iterator<Asset> iterator = assets.iterator();
+            while(iterator.hasNext()){
+                if(iterator.next().getTitle() != null){
+                    iterator.remove();
+                }
             }
 
+            List<AdContentAssetEntity> assetEntities = new ArrayList<>();
+            for (Asset asset : adContent.getAssets()) {
+                asset.setId(null); // get rid off id.
+                assetEntities.add(ReflectionUtils.mapValues(asset, AdContentAssetEntity.class));
+            }
+
+            entity = ReflectionUtils.mapValues(adContent, AdContentEntity.class);
+            entity.setTitle(titleText);
+            entity.setAssets(assetEntities);
         } // else, we got empty adContent, do nothing here.
 
         return entity;
@@ -151,24 +151,27 @@ public class AdContentController{
     private AdContentDto convertToDto(AdContentEntity entity){
         AdContentDto dto = new AdContentDto();
         if(entity != null){
-            AdContent adContent = beanMapper.map(entity, AdContent.class);
             // At DTO level, the title is stored inside of Asset.
             // At Entity level, the title is stored inside of AdContent as an unique identifier.
             // As a result, we need to add title asset back to the collection,
             // as well as to reorganize asset id.
-
             int count = 1;
-            Asset asset = new Asset();
-            asset.setId(count++);
-            asset.setTitle(entity.getTitle());
-            asset.setMeta(new AssetMeta());
+            Asset titleAsset = new Asset();
+            titleAsset.setId(count);
+            titleAsset.setTitle(new Title(entity.getTitle()));
+            titleAsset.setMeta(new AssetMeta());
 
-            List<Asset> assets = adContent.getAssets();
-            for (int i=count; i<assets.size(); i++) {
-                assets.get(i).setId(i);
+            List<AdContentAssetEntity> assetEntities = entity.getAssets();
+            List<Asset> assets = new ArrayList<>();
+            for (AdContentAssetEntity assetEntity : assetEntities) {
+                Asset asset = ReflectionUtils.mapValues(assetEntity, Asset.class);
+                asset.setId(++count);
+                assets.add(asset);
             }
+            assets.add(0, titleAsset); // prepend at head.
 
-            assets.set(0, asset); // prepend at head.
+            AdContent adContent = ReflectionUtils.mapValues(entity, AdContent.class);
+            adContent.setAssets(assets);
             dto.setAdContent(adContent);
 
         } // else, return empty dto

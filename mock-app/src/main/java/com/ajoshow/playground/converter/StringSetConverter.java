@@ -1,5 +1,8 @@
 package com.ajoshow.playground.converter;
 
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
+
 import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;
 import java.util.Arrays;
@@ -14,12 +17,20 @@ public class StringSetConverter implements AttributeConverter<Set<String>, Strin
 
     @Override
     public String convertToDatabaseColumn(Set<String> list) {
-        return String.join(";", list);
+        if(CollectionUtils.isNotEmpty(list)) {
+            return String.join(";", list);
+        }else{
+            return null;
+        }
     }
 
     @Override
     public Set<String> convertToEntityAttribute(String joined) {
-        return new HashSet<>(Arrays.asList(joined.split(";")));
+        if(StringUtils.isNoneBlank(joined)) {
+            return new HashSet<>(Arrays.asList(joined.split(";")));
+        }else{
+            return null;
+        }
     }
 
 }

@@ -1,9 +1,8 @@
 package com.ajoshow.playground.service;
 
+import com.ajoshow.playground.domain.entity.AdContentAssetEntity;
 import com.ajoshow.playground.domain.entity.AdContentEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -14,6 +13,8 @@ import java.util.List;
 public interface AdContentService {
 
     void saveOrUpdateAdContent(AdContentEntity entity);
+
+    void saveOrUpdateAdContentAssets(List<AdContentAssetEntity> entities);
 
     List<AdContentEntity> findAdContentEntityByTitle(String title);
 }

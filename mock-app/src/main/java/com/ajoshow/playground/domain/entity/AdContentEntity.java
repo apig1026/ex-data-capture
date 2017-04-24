@@ -1,7 +1,6 @@
 package com.ajoshow.playground.domain.entity;
 
 import com.ajoshow.playground.domain.Link;
-import com.ajoshow.playground.domain.Title;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -21,7 +20,7 @@ import java.util.Set;
 public class AdContentEntity implements Serializable {
 
     private Integer id;
-    private Title title;
+    private String title;
     private Set<String> impressionEvent;
     private Set<String> viewEvent;
     private List<AdContentAssetEntity> assets;
@@ -38,14 +37,12 @@ public class AdContentEntity implements Serializable {
         this.id = id;
     }
 
-    @Embedded
-    @AttributeOverride(name="text", column=@Column(name="title", nullable = false))
     @NotNull
-    public Title getTitle() {
+    public String getTitle() {
         return title;
     }
 
-    public void setTitle(Title title) {
+    public void setTitle(String title) {
         this.title = title;
     }
 
@@ -53,7 +50,7 @@ public class AdContentEntity implements Serializable {
     @CollectionTable(
             name = "ad_content_impression_url",
             joinColumns = {
-                    @JoinColumn(name = "ad_content_id", referencedColumnName = "AD_CONTENT_ID", nullable = false)
+                    @JoinColumn(name = "id", referencedColumnName = "AD_CONTENT_ID", nullable = false)
             },
             foreignKey = @ForeignKey(name = "fk_impression_url")
     )
@@ -70,7 +67,7 @@ public class AdContentEntity implements Serializable {
     @CollectionTable(
             name = "ad_content_view_url",
             joinColumns = {
-                    @JoinColumn(name = "ad_content_id", referencedColumnName = "AD_CONTENT_ID", nullable = false)
+                    @JoinColumn(name = "id", referencedColumnName = "AD_CONTENT_ID", nullable = false)
             },
             foreignKey = @ForeignKey(name = "fk_view_url")
     )
@@ -84,7 +81,7 @@ public class AdContentEntity implements Serializable {
     }
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
-    @JoinColumn(name = "AD_CONTENT_ID", referencedColumnName = "AD_CONTENT_ID")
+    @JoinColumn(name = "CONTENT_ID", referencedColumnName = "AD_CONTENT_ID")
     public List<AdContentAssetEntity> getAssets() {
         return assets;
     }
