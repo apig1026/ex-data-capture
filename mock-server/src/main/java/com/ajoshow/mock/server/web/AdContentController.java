@@ -1,8 +1,10 @@
 package com.ajoshow.mock.server.web;
 
-import com.ajoshow.mock.repository.entity.AdContentEntity;
+import com.ajoshow.mock.repository.entity.AdContent;
 import com.ajoshow.mock.service.AdContentService;
 import com.ajoshow.mock.web.EmptyResponseEntity;
+import com.ajoshow.mock.web.dto.AdContentDto;
+import com.ajoshow.mock.web.dto.AdContentWrapDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
@@ -35,9 +37,10 @@ public class AdContentController {
     @RequestMapping(method= GET, value="")
     public ResponseEntity findAdContentEntityByTitle() throws IOException {
         if(new SecureRandom().nextBoolean()) {
-            Optional<AdContentEntity> entityOpt = svc.getRandomAdContentEntity();
+            Optional<AdContent> entityOpt = svc.getRandomAdContentEntity();
             if (entityOpt.isPresent()) {
-                return new ResponseEntity<>(convertToDto(entityOpt.get()), OK);
+                AdContentDto dto = convertToDto(entityOpt.get());
+                return new ResponseEntity<>(new AdContentWrapDto(dto), OK);
             } else {
                 return new EmptyResponseEntity();
             }

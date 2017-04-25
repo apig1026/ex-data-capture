@@ -1,6 +1,6 @@
 package com.ajoshow.mock.repository;
 
-import com.ajoshow.mock.repository.entity.AdContentEntity;
+import com.ajoshow.mock.repository.entity.AdContent;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Repository;
 
@@ -20,26 +20,26 @@ public class AdContentDao {
     @PersistenceContext
     private EntityManager entityManager;
 
-    public void create(AdContentEntity entity){
+    public void create(AdContent entity){
         entityManager.persist(entity);
     }
 
-    public void update(AdContentEntity entity){
+    public void update(AdContent entity){
         entityManager.merge(entity);
     }
 
-    public AdContentEntity getAdContentEntityById(int id){
-        return entityManager.find(AdContentEntity.class, id);
+    public AdContent getAdContentEntityById(int id){
+        return entityManager.find(AdContent.class, id);
     }
 
     @SuppressWarnings("unchecked")
-    public List<AdContentEntity> findAdContentEntityByTitle(String title){
+    public List<AdContent> findAdContentEntityByTitle(String title){
         if(StringUtils.isNotBlank(title)){
             title = "%" + title + "%";
         }
         StringBuilder query = new StringBuilder();
         query.append(" FROM ");
-        query.append(AdContentEntity.class.getSimpleName());
+        query.append(AdContent.class.getSimpleName());
         query.append(" WHERE title LIKE :title");
         return entityManager.createQuery(query.toString())
                 .setParameter("title", title)
@@ -47,7 +47,7 @@ public class AdContentDao {
     }
 
     public void delete(int id){
-        AdContentEntity entity = getAdContentEntityById(id);
+        AdContent entity = getAdContentEntityById(id);
         if(entity != null){
             entityManager.remove(entity);
         }
@@ -56,7 +56,7 @@ public class AdContentDao {
     public long countAdContentEntity(){
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<Long> cq = cb.createQuery(Long.class);
-        cq.select(cb.count(cq.from(AdContentEntity.class)));
+        cq.select(cb.count(cq.from(AdContent.class)));
 
         return entityManager.createQuery(cq).getSingleResult();
     }

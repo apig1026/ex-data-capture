@@ -17,13 +17,13 @@ import java.util.Set;
                 @UniqueConstraint(name = "unique_title", columnNames="title"),
         }
 )
-public class AdContentEntity implements Serializable {
+public class AdContent implements Serializable {
 
     private Integer id;
     private String title;
     private Set<String> impressionEvent;
     private Set<String> viewEvent;
-    private List<AdContentAssetEntity> assets;
+    private List<Asset> assets;
     private Link link;
 
     @Id
@@ -82,11 +82,11 @@ public class AdContentEntity implements Serializable {
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     @JoinColumn(name = "CONTENT_ID", referencedColumnName = "AD_CONTENT_ID")
-    public List<AdContentAssetEntity> getAssets() {
+    public List<Asset> getAssets() {
         return assets;
     }
 
-    public void setAssets(List<AdContentAssetEntity> assets) {
+    public void setAssets(List<Asset> assets) {
         this.assets = assets;
     }
 

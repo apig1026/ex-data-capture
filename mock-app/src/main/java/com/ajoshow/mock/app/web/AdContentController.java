@@ -1,19 +1,20 @@
 package com.ajoshow.mock.app.web;
 
-import com.ajoshow.mock.web.dto.AdContentDto;
-import com.ajoshow.mock.repository.entity.AdContentEntity;
+import com.ajoshow.mock.repository.entity.AdContent;
 import com.ajoshow.mock.service.AdContentService;
+import com.ajoshow.mock.web.dto.AdContentDto;
+import com.ajoshow.mock.web.dto.AdContentWrapDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
@@ -62,12 +63,11 @@ public class AdContentController {
         advancedFetchAndSaveContent();
     }
 
-    @ResponseStatus(OK)
     @ResponseBody
     @RequestMapping(method= GET, value="", params="do=fetch")
-    public AdContentDto fetchAndSaveContent() throws IOException {
-        AdContentDto dto = fetchAdContent(tenMaxDSUrl);
-        AdContentEntity entity = convertToEntity(dto);
+    public ResponseEntity fetchAndSaveContent() throws IOException {
+        AdContentWrapDto dto = fetchAdContent(tenMaxDSUrl);
+        AdContent entity = convertToEntity(dto.getAdContentDto());
 
         if(entity != null){
             // debug | log event
@@ -79,20 +79,19 @@ public class AdContentController {
             // invalid or null response body causes NULL entity
             // log event or do other business logic.
         }
-        return dto;
+        return new ResponseEntity(dto, OK);
     }
 
-    @ResponseStatus(OK)
     @ResponseBody
     @RequestMapping(method= GET, value="", params="do=adv-fetch")
-    public AdContentDto advancedFetchAndSaveContent() throws IOException {
-        AdContentDto dto;
+    public ResponseEntity advancedFetchAndSaveContent() throws IOException {
+        AdContentWrapDto dto;
 
         // TODO
         dto = fetchAdContent(tenMaxDSUrl);
         dto = fetchAdContent(mockServerDSUrl);
 
-        AdContentEntity entity = convertToEntity(dto);
+        AdContent entity = convertToEntity(dto.getAdContentDto());
         if(entity != null){
             // debug | log event
             System.out.println(objectMapper.writeValueAsString(entity));
@@ -101,32 +100,33 @@ public class AdContentController {
             // invalid or null response body causes NULL entity
             // log event or do other business logic.
         }
-        return dto;
+        return new ResponseEntity(dto, OK);
     }
 
     // << Basic Question 3 >>
-    @ResponseStatus(OK)
     @ResponseBody
     @RequestMapping(method= POST, value="/query")
-    public List<AdContentDto> findAdContentEntityByTitle(
+    public ResponseEntity findAdContentEntityByTitle(
             @RequestParam(name="title") String title
     ) throws IOException {
-        List<AdContentEntity> entities = svc.findAdContentEntityByTitle(title);
-        List<AdContentDto> dtos = new ArrayList<>();
-        for(AdContentEntity entity : entities){
-            dtos.add(convertToDto(entity));
+        List<AdContent> entities = svc.findAdContentEntityByTitle(title);
+        List<AdContentWrapDto> dtos = new ArrayList<>();
+        AdContentDto dto;
+        for(AdContent entity : entities){
+            dto = convertToDto(entity);
+            dtos.add(new AdContentWrapDto(dto));
         }
-        return dtos;
+        return new ResponseEntity(dtos, OK);
     }
 
     /**
-     * Send GET request to fetch data and return in form of {@link AdContentDto} object.
+     * Send GET request to fetch data and return in form of {@link AdContentWrapDto} object.
      *
-     * @return {@link AdContentDto} object.
+     * @return {@link AdContentWrapDto} object.
      * @throws IOException
      */
-    private AdContentDto fetchAdContent(String url) throws IOException{
-        return restTemplate.getForObject(url, AdContentDto.class);
+    private AdContentWrapDto fetchAdContent(String url) throws IOException{
+        return restTemplate.getForObject(url, AdContentWrapDto.class);
     }
 
 }

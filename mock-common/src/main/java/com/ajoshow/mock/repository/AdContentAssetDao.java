@@ -1,6 +1,6 @@
 package com.ajoshow.mock.repository;
 
-import com.ajoshow.mock.repository.entity.AdContentAssetEntity;
+import com.ajoshow.mock.repository.entity.Asset;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -16,20 +16,20 @@ public class AdContentAssetDao {
     @PersistenceContext
     private EntityManager entityManager;
 
-    public void create(AdContentAssetEntity entity){
+    public void create(Asset entity){
         entityManager.persist(entity);
     }
 
-    public void update(AdContentAssetEntity entity){
+    public void update(Asset entity){
         entityManager.merge(entity);
     }
 
-    public AdContentAssetEntity getAdContentAssetEntityById(int id){
-        return entityManager.find(AdContentAssetEntity.class, id);
+    public Asset getAdContentAssetEntityById(int id){
+        return entityManager.find(Asset.class, id);
     }
 
     public void delete(int id){
-        AdContentAssetEntity entity = getAdContentAssetEntityById(id);
+        Asset entity = getAdContentAssetEntityById(id);
         if(entity != null){
             entityManager.remove(entity);
         }

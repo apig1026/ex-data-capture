@@ -1,8 +1,5 @@
 package com.ajoshow.mock.app;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
@@ -29,12 +26,5 @@ public class MockAppApplication {
 		builder.setConnectTimeout(1000 * 60);
 		builder.setReadTimeout(1000 * 15);
 		return builder.build();
-	}
-
-	@Bean
-	public ObjectMapper objectMapper(){
-		return new ObjectMapper()
-				.setSerializationInclusion(JsonInclude.Include.NON_NULL)
-				.configure(SerializationFeature.INDENT_OUTPUT, true);
 	}
 }

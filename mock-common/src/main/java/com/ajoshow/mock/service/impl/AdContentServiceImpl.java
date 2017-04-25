@@ -1,7 +1,7 @@
 package com.ajoshow.mock.service.impl;
 
-import com.ajoshow.mock.repository.entity.AdContentAssetEntity;
-import com.ajoshow.mock.repository.entity.AdContentEntity;
+import com.ajoshow.mock.repository.entity.Asset;
+import com.ajoshow.mock.repository.entity.AdContent;
 import com.ajoshow.mock.repository.AdContentAssetDao;
 import com.ajoshow.mock.repository.AdContentDao;
 import com.ajoshow.mock.service.AdContentService;
@@ -30,7 +30,7 @@ public class AdContentServiceImpl implements AdContentService {
 
     @Transactional
     @Override
-    public void saveOrUpdateAdContent(AdContentEntity entity){
+    public void saveOrUpdateAdContent(AdContent entity){
         saveOrUpdateAdContentAssets(entity.getAssets());
 
         if(entity.getId() == null){
@@ -42,9 +42,9 @@ public class AdContentServiceImpl implements AdContentService {
 
     @Transactional
     @Override
-    public void saveOrUpdateAdContentAssets(List<AdContentAssetEntity> entities){
+    public void saveOrUpdateAdContentAssets(List<Asset> entities){
         if(CollectionUtils.isNotEmpty(entities)){
-            for(AdContentAssetEntity entity : entities){
+            for(Asset entity : entities){
                 if(entity.getId() == null){
                     assetDao.create(entity);
                 }else{
@@ -56,14 +56,14 @@ public class AdContentServiceImpl implements AdContentService {
 
     @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
     @Override
-    public List<AdContentEntity> findAdContentEntityByTitle(String title){
+    public List<AdContent> findAdContentEntityByTitle(String title){
         return dao.findAdContentEntityByTitle(title);
     }
 
 
     @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
     @Override
-    public Optional<AdContentEntity> getRandomAdContentEntity(){
+    public Optional<AdContent> getRandomAdContentEntity(){
         long n = dao.countAdContentEntity();
         if(n > 0){
             int randomId = (int)(new SecureRandom().nextDouble() * n) + 1;

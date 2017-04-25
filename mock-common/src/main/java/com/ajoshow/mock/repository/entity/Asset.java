@@ -10,7 +10,7 @@ import java.io.Serializable;
  */
 @Entity
 @Table(name = "ad_content_asset")
-public class AdContentAssetEntity implements Serializable {
+public class Asset implements Serializable {
     private Integer id;
     private Data data;
     private Title title;

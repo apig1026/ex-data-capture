@@ -1,5 +1,6 @@
-package com.ajoshow.mock.domain;
+package com.ajoshow.mock.web.dto;
 
+import com.ajoshow.mock.domain.*;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
@@ -8,7 +9,7 @@ import com.fasterxml.jackson.annotation.JsonUnwrapped;
  * Created by andychu on 2017/4/22.
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Asset {
+public class AssetDto {
     private Integer id;
     private Data data;
     private Title title;
@@ -96,7 +97,7 @@ public class Asset {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        Asset asset = (Asset) o;
+        AssetDto asset = (AssetDto) o;
 
         if (id != null ? !id.equals(asset.id) : asset.id != null) return false;
         if (data != null ? !data.equals(asset.data) : asset.data != null) return false;
