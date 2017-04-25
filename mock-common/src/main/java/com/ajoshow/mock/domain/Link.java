@@ -1,6 +1,6 @@
 package com.ajoshow.mock.domain;
 
-import com.ajoshow.mock.converter.StringSetConverter;
+import com.ajoshow.mock.repository.converter.StringSetConverter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.apache.commons.lang3.StringUtils;
 

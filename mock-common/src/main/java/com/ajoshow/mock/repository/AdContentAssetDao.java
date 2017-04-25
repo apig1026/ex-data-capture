@@ -1,6 +1,6 @@
 package com.ajoshow.mock.repository;
 
-import com.ajoshow.mock.domain.entity.AdContentAssetEntity;
+import com.ajoshow.mock.repository.entity.AdContentAssetEntity;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;

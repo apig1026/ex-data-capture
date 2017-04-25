@@ -1,25 +1,21 @@
-package com.ajoshow.mock.server.controller;
+package com.ajoshow.mock.server.web;
 
-import com.ajoshow.mock.domain.AdContent;
-import com.ajoshow.mock.domain.dto.AdContentDto;
-import com.ajoshow.mock.domain.entity.AdContentEntity;
+import com.ajoshow.mock.repository.entity.AdContentEntity;
 import com.ajoshow.mock.service.AdContentService;
+import com.ajoshow.mock.web.EmptyResponseEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.io.IOException;
 import java.security.SecureRandom;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
-import static com.ajoshow.mock.converter.BeanConverter.convertToDto;
+import static com.ajoshow.mock.web.converter.BeanConverter.convertToDto;
 import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
@@ -28,25 +24,22 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
  */
 @Validated
 @Controller
-@RequestMapping(value = "/server/ad-contents", params="v=1")
-public class ServerController {
+@RequestMapping(value = "/ad-contents", params="v=1")
+public class AdContentController {
 
     @Autowired
     @Qualifier("AdContentServiceImpl")
     private AdContentService svc;
 
-    private static final AdContentDto EMPTY_OBJECT = new AdContentDto();
-
-    @ResponseStatus(OK)
     @ResponseBody
     @RequestMapping(method= GET, value="")
-    public AdContentDto findAdContentEntityByTitle() throws IOException {
+    public ResponseEntity findAdContentEntityByTitle() throws IOException {
         if(new SecureRandom().nextBoolean()) {
             Optional<AdContentEntity> entityOpt = svc.getRandomAdContentEntity();
             if (entityOpt.isPresent()) {
-                return convertToDto(entityOpt.get());
+                return new ResponseEntity<>(convertToDto(entityOpt.get()), OK);
             } else {
-                return EMPTY_OBJECT;
+                return new EmptyResponseEntity();
             }
         }else{
             try {
@@ -54,7 +47,7 @@ public class ServerController {
             } catch (InterruptedException e) {
                 // log interrupted event
             }
-            return EMPTY_OBJECT;
+            return new EmptyResponseEntity();
         }
     }
 

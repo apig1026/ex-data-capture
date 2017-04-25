@@ -1,7 +1,7 @@
 package com.ajoshow.mock.service;
 
-import com.ajoshow.mock.domain.entity.AdContentAssetEntity;
-import com.ajoshow.mock.domain.entity.AdContentEntity;
+import com.ajoshow.mock.repository.entity.AdContentAssetEntity;
+import com.ajoshow.mock.repository.entity.AdContentEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

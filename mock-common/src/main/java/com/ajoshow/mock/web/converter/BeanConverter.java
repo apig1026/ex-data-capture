@@ -1,13 +1,13 @@
-package com.ajoshow.mock.converter;
+package com.ajoshow.mock.web.converter;
 
-import com.ajoshow.mock.ReflectionUtils;
+import com.ajoshow.mock.domain.utils.ReflectionUtils;
 import com.ajoshow.mock.domain.AdContent;
 import com.ajoshow.mock.domain.Asset;
 import com.ajoshow.mock.domain.AssetMeta;
 import com.ajoshow.mock.domain.Title;
-import com.ajoshow.mock.domain.dto.AdContentDto;
-import com.ajoshow.mock.domain.entity.AdContentAssetEntity;
-import com.ajoshow.mock.domain.entity.AdContentEntity;
+import com.ajoshow.mock.web.dto.AdContentDto;
+import com.ajoshow.mock.repository.entity.AdContentAssetEntity;
+import com.ajoshow.mock.repository.entity.AdContentEntity;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.*;

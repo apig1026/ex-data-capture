@@ -1,4 +1,4 @@
-package com.ajoshow.mock.domain.dto;
+package com.ajoshow.mock.web.dto;
 
 import com.ajoshow.mock.domain.AdContent;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 /**
  * Created by andychu on 2017/4/22.
  */
-public class AdContentDto {
+public class AdContentDto{
     @JsonProperty("native")
     private AdContent adContent;
 

@@ -1,4 +1,4 @@
-package com.ajoshow.mock.domain.entity;
+package com.ajoshow.mock.repository.entity;
 
 import com.ajoshow.mock.domain.Link;
 

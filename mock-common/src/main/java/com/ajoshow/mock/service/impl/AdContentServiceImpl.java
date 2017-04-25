@@ -1,7 +1,7 @@
 package com.ajoshow.mock.service.impl;
 
-import com.ajoshow.mock.domain.entity.AdContentAssetEntity;
-import com.ajoshow.mock.domain.entity.AdContentEntity;
+import com.ajoshow.mock.repository.entity.AdContentAssetEntity;
+import com.ajoshow.mock.repository.entity.AdContentEntity;
 import com.ajoshow.mock.repository.AdContentAssetDao;
 import com.ajoshow.mock.repository.AdContentDao;
 import com.ajoshow.mock.service.AdContentService;

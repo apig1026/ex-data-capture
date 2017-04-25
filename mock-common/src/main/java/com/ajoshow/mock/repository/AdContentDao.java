@@ -1,6 +1,6 @@
 package com.ajoshow.mock.repository;
 
-import com.ajoshow.mock.domain.entity.AdContentEntity;
+import com.ajoshow.mock.repository.entity.AdContentEntity;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Repository;
 

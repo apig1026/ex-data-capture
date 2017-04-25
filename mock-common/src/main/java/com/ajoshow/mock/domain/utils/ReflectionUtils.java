@@ -1,4 +1,4 @@
-package com.ajoshow.mock;
+package com.ajoshow.mock.domain.utils;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;

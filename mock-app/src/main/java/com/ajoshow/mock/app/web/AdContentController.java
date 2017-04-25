@@ -1,7 +1,7 @@
-package com.ajoshow.mock.app.controller;
+package com.ajoshow.mock.app.web;
 
-import com.ajoshow.mock.domain.dto.AdContentDto;
-import com.ajoshow.mock.domain.entity.AdContentEntity;
+import com.ajoshow.mock.web.dto.AdContentDto;
+import com.ajoshow.mock.repository.entity.AdContentEntity;
 import com.ajoshow.mock.service.AdContentService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,8 +20,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.ajoshow.mock.converter.BeanConverter.convertToDto;
-import static com.ajoshow.mock.converter.BeanConverter.convertToEntity;
+import static com.ajoshow.mock.web.converter.BeanConverter.convertToDto;
+import static com.ajoshow.mock.web.converter.BeanConverter.convertToEntity;
 import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
@@ -31,8 +31,8 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
  */
 @Validated
 @Controller
-@RequestMapping(value = "/app/ad-contents", params = "v=1")
-public class AppController {
+@RequestMapping(value = "ad-contents", params = "v=1")
+public class AdContentController {
 
     @Value("${app.tenmax.datasource.url}")
     private String tenMaxDSUrl;
