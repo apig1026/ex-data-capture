@@ -20,6 +20,8 @@ import org.springframework.web.client.RestTemplate;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 
 import static com.ajoshow.mock.web.converter.BeanConverter.convertToDto;
 import static com.ajoshow.mock.web.converter.BeanConverter.convertToEntity;
@@ -53,19 +55,19 @@ public class AdContentController {
 
     // << Basic Question 1 >>
     @Scheduled(cron = "${app.schedule.fetch.content.cron}")
-    public void scheduleFetchAndSaveContent() throws IOException {
+    public void scheduleFetchAndSaveContent()throws IOException {
         fetchAndSaveContent();
     }
 
     // << Advanced Question 2 >>
     @Scheduled(cron = "${app.schedule.fetch.content.cron}")
-    public void scheduleAdvancedFetchAndSaveContent() throws IOException {
+    public void scheduleAdvancedFetchAndSaveContent()throws IOException, ExecutionException, InterruptedException {
         advancedFetchAndSaveContent();
     }
 
     @ResponseBody
     @RequestMapping(method= GET, value="", params="do=fetch")
-    public ResponseEntity fetchAndSaveContent() throws IOException {
+    public ResponseEntity fetchAndSaveContent()throws IOException {
         AdContentWrapDto dto = fetchAdContent(tenMaxDSUrl);
         AdContent entity = convertToEntity(dto.getAdContentDto());
 
@@ -84,12 +86,12 @@ public class AdContentController {
 
     @ResponseBody
     @RequestMapping(method= GET, value="", params="do=adv-fetch")
-    public ResponseEntity advancedFetchAndSaveContent() throws IOException {
-        AdContentWrapDto dto;
+    public ResponseEntity advancedFetchAndSaveContent() throws IOException, ExecutionException, InterruptedException {
 
-        // TODO
-        dto = fetchAdContent(tenMaxDSUrl);
-        dto = fetchAdContent(mockServerDSUrl);
+        CompletableFuture<AdContentWrapDto> fetchTenMaxContentFuture = CompletableFuture.supplyAsync(()->fetchAdContent(tenMaxDSUrl));
+        CompletableFuture<AdContentWrapDto> fetchMockServerContentFuture = CompletableFuture.supplyAsync(()->fetchAdContent(mockServerDSUrl));
+        CompletableFuture fetchContentFuture = CompletableFuture.anyOf(fetchTenMaxContentFuture, fetchMockServerContentFuture);
+        AdContentWrapDto dto = (AdContentWrapDto) fetchContentFuture.get();
 
         AdContent entity = convertToEntity(dto.getAdContentDto());
         if(entity != null){
@@ -125,7 +127,7 @@ public class AdContentController {
      * @return {@link AdContentWrapDto} object.
      * @throws IOException
      */
-    private AdContentWrapDto fetchAdContent(String url) throws IOException{
+    private AdContentWrapDto fetchAdContent(String url) {
         return restTemplate.getForObject(url, AdContentWrapDto.class);
     }
 
