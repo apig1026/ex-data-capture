@@ -1,5 +1,6 @@
 package com.ajoshow.mock.app.web;
 
+import com.ajoshow.mock.domain.utils.FutureUtils;
 import com.ajoshow.mock.repository.entity.AdContent;
 import com.ajoshow.mock.service.AdContentService;
 import com.ajoshow.mock.web.dto.AdContentDto;
@@ -88,10 +89,12 @@ public class AdContentController {
     @RequestMapping(method= GET, value="", params="do=adv-fetch")
     public ResponseEntity advancedFetchAndSaveContent() throws IOException, ExecutionException, InterruptedException {
 
+        CompletableFuture<AdContentWrapDto> timeoutFuture = FutureUtils.delayAndGetAsync(5000, AdContentWrapDto::new);
         CompletableFuture<AdContentWrapDto> fetchTenMaxContentFuture = CompletableFuture.supplyAsync(()->fetchAdContent(tenMaxDSUrl));
         CompletableFuture<AdContentWrapDto> fetchMockServerContentFuture = CompletableFuture.supplyAsync(()->fetchAdContent(mockServerDSUrl));
-        CompletableFuture fetchContentFuture = CompletableFuture.anyOf(fetchTenMaxContentFuture, fetchMockServerContentFuture);
+        CompletableFuture fetchContentFuture = CompletableFuture.anyOf(fetchTenMaxContentFuture, fetchMockServerContentFuture, timeoutFuture);
         AdContentWrapDto dto = (AdContentWrapDto) fetchContentFuture.get();
+
 
         AdContent entity = convertToEntity(dto.getAdContentDto());
         if(entity != null){
