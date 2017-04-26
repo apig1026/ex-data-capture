@@ -50,7 +50,7 @@ public class AdContent implements Serializable {
     @CollectionTable(
             name = "ad_content_impression_url",
             joinColumns = {
-                    @JoinColumn(name = "id", referencedColumnName = "AD_CONTENT_ID", nullable = false)
+                    @JoinColumn(name = "AD_CONTENT_ID", referencedColumnName = "AD_CONTENT_ID", nullable = false)
             },
             foreignKey = @ForeignKey(name = "fk_impression_url")
     )
@@ -67,7 +67,7 @@ public class AdContent implements Serializable {
     @CollectionTable(
             name = "ad_content_view_url",
             joinColumns = {
-                    @JoinColumn(name = "id", referencedColumnName = "AD_CONTENT_ID", nullable = false)
+                    @JoinColumn(name = "AD_CONTENT_ID", referencedColumnName = "AD_CONTENT_ID", nullable = false)
             },
             foreignKey = @ForeignKey(name = "fk_view_url")
     )
@@ -81,7 +81,7 @@ public class AdContent implements Serializable {
     }
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
-    @JoinColumn(name = "CONTENT_ID", referencedColumnName = "AD_CONTENT_ID")
+    @JoinColumn(name = "AD_CONTENT_ID", referencedColumnName = "AD_CONTENT_ID")
     public List<Asset> getAssets() {
         return assets;
     }
