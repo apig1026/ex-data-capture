@@ -67,3 +67,5 @@ Mock-Server
 
 - Put shared objects and classes here. 
  
+<br />
+Note: https://spring.io/guides/gs/spring-boot-docker/
