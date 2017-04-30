@@ -1,8 +1,11 @@
-# https://hub.docker.com/r/lwieske/java-8/
-FROM lwieske/java-8:jre-8u121-slim
+#https://hub.docker.com/r/frolvlad/alpine-oraclejdk8/
+FROM frolvlad/alpine-oraclejdk8:slim
 
 # Author
 MAINTAINER ajoshow@gmail.com
+
+# Spring Boot default working directory for tomcat.
+VOLUME /tmp
 
 # Set the working directory to /app
 WORKDIR /app
@@ -10,8 +13,10 @@ WORKDIR /app
 # Copy the current directory contents into the container at /app
 ADD . /app
 
-# Make port 8080 available to the world outside this container
+# Make port available to the world outside this container
 EXPOSE 8080
 
-# Start the application with parameters
-CMD java -Dapp.mockserver.datasource.url=http://127.0.0.1:8081/ad-contents?v=1 -jar /app/mock-app.jar
+# Run the application with cammands
+RUN sh -c 'touch /app/*'
+ENV JAVA_OPTS="-Dapp.mockserver.datasource.url=http://127.0.0.1:8081/ad-contents?v=1"
+ENTRYPOINT [ "sh", "-c", "java $JAVA_OPTS -jar /app/mockapp.jar" ]

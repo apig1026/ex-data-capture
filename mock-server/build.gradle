@@ -3,3 +3,6 @@ dependencies {
     compile( project(':mock-common') )
 }
 
+jar{
+    baseName="mockserver"
+}

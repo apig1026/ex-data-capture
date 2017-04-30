@@ -20,20 +20,24 @@ bootRepackage
 java -jar {filename.jar} 
 ```
 
-##### Docker:
-**Run**
+##### Run using Docker:
+First we can run mock-server by:
 ```
-sudo docker run {port}:8080 ajoshow/mockapp
+docker run {port}:8081 ajoshow/mockserver:0.0.1 
 ```
+Before running mock-app, make sure we got the mock-server's ip address first.
+Find the Mock-Server container's ip address by:  
 ```
-sudo docker run {port}:8081 ajoshow/mockserver 
+docker inspect --format '{{ .NetworkSettings.IPAddress }}' {CONTAINER ID}
+```
+The above command should prints the mock-server container's ip address, for example: 172.17.0.1. 
+Now, we can run mock-app with additional env variables by:
+
+```
+docker run -e JAVA_OPTS="-Dapp.mockserver.datasource.url=http://172.17.0.1:8081/ad-contents?v=1" -p 8080:8080 ajoshow/mockapp:0.0.1
 ```
 
-**Build**  
-*The Dockerfile are located at mock-server/docker and mock-app/docker,
-you may need to gradle bootPackage first, and put executable jar file into the same 
-directory where the Dockerfile is before build the image.*  
-
+*The default ports for mock-app and mock-server are 8080 and 8081.*
 
 ## API
 Mock-App

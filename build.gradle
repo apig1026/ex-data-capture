@@ -17,6 +17,7 @@ subprojects {
     apply plugin: 'org.springframework.boot'
     apply plugin: 'idea'
 
+    group = 'ajoshow'
     sourceCompatibility = 1.8
 
     repositories {
