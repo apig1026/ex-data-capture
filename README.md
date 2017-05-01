@@ -23,7 +23,7 @@ java -jar {filename.jar}
 ##### Run using Docker:
 First we can run mock-server by:
 ```
-docker run {port}:8081 ajoshow/mockserver:0.0.1 
+docker run -p {port}:8081 ajoshow/mockserver:0.0.1 
 ```
 Before running mock-app, make sure we got the mock-server's ip address first.
 Find the Mock-Server container's ip address by:  
